@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -28,23 +28,25 @@ export default function ProfilePage() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
-            <h1>Profile</h1>
-            <hr />
-            <p>Profile Page</p>
-            <h2 className="p-3 rounded bg-green-500">{data === "" ? "No User" : <Link href={`/profile/${data}`}>{data}</Link>}</h2>
-            <hr />
-            <button
-                className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={logout}
-            >
-                Logout
-            </button>
-            <button
-                className="bg-green-800 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={getUserDetails}
-            >
-                Get User Details
-            </button>
+            <Toaster />
+            <div className='p-2 h1 text-2xl p-4'>Profile</div>
+            <div className='flex flex-col border-2 w-80  p-4 rounded-md'>
+                <p className="flex justify-center ">Profile Page</p>
+                <h2 className="p-3 rounded ">{data === "" ? "No User" : <Link href={`/profile/${data}`}>{data}</Link>}</h2>
+                <hr />
+                <button
+                    className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={logout}
+                >
+                    Logout
+                </button>
+                <button
+                    className="bg-green-800 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={getUserDetails}
+                >
+                    Get User Details
+                </button>
+            </div>
         </div>
     )
 }

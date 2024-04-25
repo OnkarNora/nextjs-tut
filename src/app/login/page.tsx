@@ -2,12 +2,13 @@
 import Link from "next/link";
 import React,{useState, useEffect} from "react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
+import { Login, GetData } from '@/app/actions/login';
 
-export default function LoginPage () {
+const LoginPage = () => {
     const router = useRouter();
-    const [user, setUser] = React.useState({
+    const [user, setUser] = useState({
         email: "",
         password: "",
     })
@@ -23,11 +24,23 @@ export default function LoginPage () {
             router.push("/profile");
         } catch (error: any) {
             console.log("login failed", error.message);
-            toast(error.message);
+            toast.error(error.message);
         } finally {
             setLoading(false);
         }
+        // Login(user).then((res: any) => {
+        //     console.log('res', res)
+        //     if (res.success) router.push("/profile");
+        // });
+        const data = await GetData(user);
+        console.log("data", data)
     }
+
+    // async function GetData () {
+    //     'use server'
+    //     const dbUser = await User.findOne({ email: user.email})
+    //     return dbUser;
+    // }
 
     useEffect(() => {
         if(user.email.length > 0 && user.password.length>0 ) {
@@ -39,32 +52,42 @@ export default function LoginPage () {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
-            <h1>{loading ? "Processing" : "Login"}</h1>
-            <label htmlFor="email">email</label>
-            <input
-            className="p-2 border-grey-300 rounded-lg mb-4 focus:outline-none focus:border-grey-600 text-black"
-                id="email"
-                type="text"
-                value={user.email}
-                onChange={(e) => setUser({...user, email: e.target.value})}
-                placeholder="email"
-            />
-            <label htmlFor="password">password</label>
-            <input
-            className="p-2 border-grey-300 rounded-lg mb-4 focus:outline-none focus:border-grey-600 text-black"
-                id="password"
-                type="password"
-                value={user.password}
-                onChange={(e) => setUser({...user, password: e.target.value})}
-                placeholder="password"
-            />
-            <button
-                className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
-                onClick={onLogin}
-            >
-                Login here
-            </button>
-            <Link href="/signup">Visit Signup</Link>
+            <Toaster />
+            <div className='p-2 h1 text-2xl'>{loading ? "Processing" : "Login"}</div>
+            <div className='flex flex-col border-2 w-80  p-4 rounded-md'>
+                <label htmlFor="email">Email</label>
+                <input
+                className="p-2 border-grey-300 rounded-lg mb-4 focus:outline-none focus:border-grey-600 text-black"
+                    id="email"
+                    type="text"
+                    value={user.email}
+                    onChange={(e) => setUser({...user, email: e.target.value})}
+                    placeholder="email"
+                />
+                <label htmlFor="password">Password</label>
+                <input
+                className="p-2 border-grey-300 rounded-lg mb-4 focus:outline-none focus:border-grey-600 text-black"
+                    id="password"
+                    type="password"
+                    value={user.password}
+                    onChange={(e) => setUser({...user, password: e.target.value})}
+                    placeholder="password"
+                />
+                <button
+                    className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none hover:border-gray-600"
+                    onClick={onLogin}
+                >
+                    Login here
+                </button>
+                <Link
+                    href="/signup"
+                    className="p-2 flex justify-center border border-gray-300 rounded-lg mb-4 focus:outline-none hover:border-gray-600"
+                >
+                    Signup
+                </Link>
+            </div>
         </div>
     )
 }
+
+export default LoginPage;
